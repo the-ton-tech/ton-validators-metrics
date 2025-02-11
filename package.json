@@ -1,0 +1,42 @@
+{
+  "name": "validator-control",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "turbo run start",
+    "dev": "turbo run dev",
+    "deploy": "turbo run deploy",
+    "ci": "turbo run ci",
+    "build": "turbo run build",
+    "style": "turbo run style",
+    "check-style": "eslint packages/**/*.ts apps/**/*.ts",
+    "test": "turbo run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "29.5.12",
+    "@typescript-eslint/eslint-plugin": "7.7.1",
+    "@typescript-eslint/parser": "7.7.1",
+    "cross-env": "7.0.3",
+    "eslint": "8.57.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "18.0.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-prettier": "5.1.3",
+    "jest": "29.7.0",
+    "rimraf": "5.0.5",
+    "ts-jest": "29.1.2",
+    "ts-node": "10.9.2",
+    "turbo": "1.13.2",
+    "typescript": "5.4.5"
+  },
+  "packageManager": "pnpm@8.15.1+sha1.8adba2d20330c02d3856e18c4eb3819d1d3ca6aa"
+}

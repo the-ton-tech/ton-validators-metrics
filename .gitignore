@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.mainnet
+.env.testnet
+.idea
+.turbo/
+**/.turbo/
+build/
+**/build/
+data
+.DS_Store
+.secret/
