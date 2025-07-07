@@ -7,7 +7,8 @@ const CycleScoreboardSchema = z.object({
       cycle_id: z.number(),
       utime_since: z.number(),
       utime_until: z.number(),
-      adnl_addr: z.string(),
+      adnl_addr: z.string()
+        .transform((val) => Buffer.from(val, "hex")),
       pubkey: z.string(),
       pubkey_hash: z.string(),
       weight: z.number(),
@@ -16,11 +17,14 @@ const CycleScoreboardSchema = z.object({
       validator_adnl: z.string()
         .nullable()
         .transform((val) =>
-          val ? Buffer.from(val, "hex") : Buffer.alloc(64)),
+          val ? Buffer.from(val, "hex") : null),
       efficiency: z.number()
         .nullable()
-        .default(0),
-    })
+        .transform((val) => val ?? 0)
+    }).transform((item => ({
+      ...item,
+      validator_adnl: item.validator_adnl ?? item.adnl_addr,
+    })))
   ),
 });
 
