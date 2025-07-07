@@ -20,8 +20,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ton/core": "0.56.3",
-    "@ton/ton": "13.11.1",
+    "@ton/core": "0.61.0",
+    "@ton/ton": "15.3.1",
     "axios": "1.6.8",
     "dataloader": "2.2.2",
     "node-cache": "5.1.2",

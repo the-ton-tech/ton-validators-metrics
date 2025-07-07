@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/src/start.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development NODE_OPTIONS='--conditions=development' nodemon src/start.ts",
+    "dev": "cross-env NODE_ENV=development NODE_OPTIONS='--conditions=development --stack-trace-limit=1000' nodemon src/start.ts",
     "debug": "ts-node-dev --respawn ./src/start.ts",
     "start": "cross-env NODE_ENV=production TS_NODE_BASEURL=./build node -r tsconfig-paths/register --heapsnapshot-signal=SIGUSR2 build/src/start.js --name monitoring",
     "build": "rimraf ./build && npm run compile",
@@ -16,8 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ton/core": "0.56.3",
-    "@ton/ton": "13.11.1",
+    "@ton/core": "0.61.0",
+    "@ton/ton": "15.3.1",
     "axios": "1.6.8",
     "client": "workspace:*",
     "config": "workspace:*",

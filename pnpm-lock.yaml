@@ -60,11 +60,11 @@ importers:
   apps/monitoring:
     dependencies:
       '@ton/core':
-        specifier: 0.56.3
-        version: 0.56.3(@ton/crypto@3.2.0)
+        specifier: 0.61.0
+        version: 0.61.0(@ton/crypto@3.2.0)
       '@ton/ton':
-        specifier: 13.11.1
-        version: 13.11.1(@ton/core@0.56.3)(@ton/crypto@3.2.0)
+        specifier: 15.3.1
+        version: 15.3.1(@ton/core@0.61.0)(@ton/crypto@3.2.0)
       axios:
         specifier: 1.6.8
         version: 1.6.8
@@ -127,11 +127,11 @@ importers:
   packages/client:
     dependencies:
       '@ton/core':
-        specifier: 0.56.3
-        version: 0.56.3(@ton/crypto@3.2.0)
+        specifier: 0.61.0
+        version: 0.61.0(@ton/crypto@3.2.0)
       '@ton/ton':
-        specifier: 13.11.1
-        version: 13.11.1(@ton/core@0.56.3)(@ton/crypto@3.2.0)
+        specifier: 15.3.1
+        version: 15.3.1(@ton/core@0.61.0)(@ton/crypto@3.2.0)
       axios:
         specifier: 1.6.8
         version: 1.6.8
@@ -143,7 +143,7 @@ importers:
         version: 5.1.2
       ton-lite-client:
         specifier: 3.0.0
-        version: 3.0.0(@ton/core@0.56.3)
+        version: 3.0.0(@ton/core@0.61.0)
       types:
         specifier: workspace:*
         version: link:../types
@@ -161,8 +161,8 @@ importers:
   packages/config:
     dependencies:
       '@ton/core':
-        specifier: 0.56.3
-        version: 0.56.3(@ton/crypto@3.2.0)
+        specifier: 0.61.0
+        version: 0.61.0(@ton/crypto@3.2.0)
       dotenv:
         specifier: 16.4.5
         version: 16.4.5
@@ -190,8 +190,8 @@ importers:
   packages/types:
     dependencies:
       '@ton/core':
-        specifier: 0.56.3
-        version: 0.56.3(@ton/crypto@3.2.0)
+        specifier: 0.61.0
+        version: 0.61.0(@ton/crypto@3.2.0)
       utils:
         specifier: workspace:*
         version: link:../utils
@@ -206,8 +206,8 @@ importers:
   packages/utils:
     dependencies:
       '@ton/core':
-        specifier: 0.56.3
-        version: 0.56.3(@ton/crypto@3.2.0)
+        specifier: 0.61.0
+        version: 0.61.0(@ton/crypto@3.2.0)
       logger:
         specifier: workspace:*
         version: link:../logger
@@ -983,8 +983,8 @@ packages:
       '@sinonjs/commons': 3.0.1
     dev: true
 
-  /@ton/core@0.56.3(@ton/crypto@3.2.0):
-    resolution: {integrity: sha512-HVkalfqw8zqLLPehtq0CNhu5KjVzc7IrbDwDHPjGoOSXmnqSobiWj8a5F+YuWnZnEbQKtrnMGNOOjVw4LG37rg==}
+  /@ton/core@0.61.0(@ton/crypto@3.2.0):
+    resolution: {integrity: sha512-0qyVfP2dDue2bq80ydXggo2MlufcmzuFk6G94qRrZxvyQ3NSe4UeBTeRf1gQmN7tywgTsX2gS61e4yvJrlUu4Q==}
     peerDependencies:
       '@ton/crypto': '>=3.2.0'
     dependencies:
@@ -1006,13 +1006,13 @@ packages:
       tweetnacl: 1.0.3
     dev: false
 
-  /@ton/ton@13.11.1(@ton/core@0.56.3)(@ton/crypto@3.2.0):
-    resolution: {integrity: sha512-tcLdHzwhS5bmS0EGstcmfYK0ZeRrNz1AUIzUGKq/Xh0MGEwfP1qZBMloGGHLQnyZdRQ1D7Wx4g4mBKNrvG6DcQ==}
+  /@ton/ton@15.3.1(@ton/core@0.61.0)(@ton/crypto@3.2.0):
+    resolution: {integrity: sha512-+UuvbE0o0VIU/0W90STO+emRIDr3Vs39LdbX5ySm/Ra+RQJSiH0KX6TDOFqWDmD2Wzk4/zw21KwSiZ6Xjk8zlw==}
     peerDependencies:
-      '@ton/core': '>=0.56.0'
+      '@ton/core': '>=0.60.0'
       '@ton/crypto': '>=3.2.0'
     dependencies:
-      '@ton/core': 0.56.3(@ton/crypto@3.2.0)
+      '@ton/core': 0.61.0(@ton/crypto@3.2.0)
       '@ton/crypto': 3.2.0
       axios: 1.6.8
       dataloader: 2.2.2
@@ -4766,12 +4766,12 @@ packages:
     engines: {node: '>=0.6'}
     dev: false
 
-  /ton-lite-client@3.0.0(@ton/core@0.56.3):
+  /ton-lite-client@3.0.0(@ton/core@0.61.0):
     resolution: {integrity: sha512-pKiQKzHTBNBzVbgWo1BwQlfzvvGgS1tiB0BaHIM+6yX7WLaSTBrYTtLySRfEMxdwnI5jN98Tjt+ilS1FxVFJyQ==}
     peerDependencies:
       '@ton/core': '*'
     dependencies:
-      '@ton/core': 0.56.3(@ton/crypto@3.2.0)
+      '@ton/core': 0.61.0(@ton/crypto@3.2.0)
       adnl: 1.0.3
       dataloader: 2.2.2
       lru_map: 0.4.1

@@ -194,6 +194,9 @@ export type ElectorDataValidatorComplaint = {
 function loadElectorDataValidatorComplaint(
   cs: Slice
 ): ElectorDataValidatorComplaint {
+  if (cs.loadUint(8) !== 0x2d) {
+    throw new Error('Failed to parse validator complaint')
+  }
   return {
     validatorPubkey: cs.loadBuffer(256 / 8),
     description: loadComplaintDescr(cs.loadRef().beginParse()),
@@ -245,7 +248,7 @@ function storeElectorDataValidatorComplaint(
 export type ElectorDataComplaintStatus = {
   status: number;
   complaint: ElectorDataValidatorComplaint;
-  voters: Dictionary<bigint, boolean>;
+  voters: Dictionary<bigint, number>;
   vsetId: bigint;
   weightRemaining: bigint;
 };
@@ -254,7 +257,7 @@ function loadElectorDataComplaintStatus(cs: Slice): ElectorDataComplaintStatus {
   return {
     status: cs.loadUint(8),
     complaint: loadElectorDataValidatorComplaint(cs.loadRef().beginParse()),
-    voters: cs.loadDict(Dictionary.Keys.BigInt(16), Dictionary.Values.Bool()),
+    voters: cs.loadDict(Dictionary.Keys.BigInt(16), Dictionary.Values.Uint(32)),
     vsetId: cs.loadUintBig(256),
     weightRemaining: cs.loadIntBig(64),
   };

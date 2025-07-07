@@ -13,8 +13,13 @@ const CycleScoreboardSchema = z.object({
       weight: z.number(),
       idx: z.number(),
       stake: z.number(),
-      validator_adnl: z.string().transform((val) => Buffer.from(val, "hex")),
-      efficiency: z.number(),
+      validator_adnl: z.string()
+        .nullable()
+        .transform((val) =>
+          val ? Buffer.from(val, "hex") : Buffer.alloc(64)),
+      efficiency: z.number()
+        .nullable()
+        .default(0),
     })
   ),
 });
