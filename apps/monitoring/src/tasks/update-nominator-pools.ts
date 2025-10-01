@@ -8,7 +8,7 @@ import { getNominatorPoolData } from "../network/get-nominator-pool-data";
 import { getValidatorNominatorPools } from "../network/get-validator-nominator-pools";
 import { getMasterchainInfo } from "../network/get-masterchain-info";
 
-export async function updatePools(): Promise<void> {
+export async function updateNominatorPools(): Promise<void> {
   const appConfig = await getAppConfig(constants.envPath);
   const network = appConfig.network;
 

@@ -9,7 +9,7 @@ import { getElectorData } from "../network/get-elector-data";
 import { getNetworkConfig } from "../network/get-network-config";
 import { getMasterchainInfo } from "../network/get-masterchain-info";
 
-export async function updatePoolsElectorBalance(): Promise<void> {
+export async function updateNominatorPoolsElectorBalance(): Promise<void> {
   const appConfig = await getAppConfig(constants.envPath);
   const network = appConfig.network;
 
