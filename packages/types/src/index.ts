@@ -14,11 +14,11 @@ export { hasInMessage } from "./transaction/has-in-message";
 export { isTransactionSuccess } from "./transaction/is-transaction-success";
 
 export {
-  PoolData,
-  loadPoolData,
-  PoolDataState,
-  PoolDataNominators,
-} from "./pool/data";
+  NominatorPoolData,
+  loadNominatorPoolData,
+  NominatorPoolDataState,
+  NominatorPoolDataNominators,
+} from "./nominator-pool/data";
 
 export {
   ElectorData,

@@ -8,7 +8,7 @@ const MASTERCHAIN = -1;
 /**
  * Represents the state of a nominator pool.
  */
-export enum PoolDataState {
+export enum NominatorPoolDataState {
   /**
    * Does not participate in validation
    */
@@ -26,7 +26,7 @@ export enum PoolDataState {
 /**
  * Represents the data of nominators in the pool.
  */
-export interface PoolDataNominators {
+export interface NominatorPoolDataNominators {
   /**
    * The address of the nominator.
    */
@@ -42,9 +42,9 @@ export interface PoolDataNominators {
 }
 
 /**
- * Represents the config of the pool.
+ * Represents the config of the nominator pool.
  */
-export interface PoolDataConfig {
+export interface NominatorPoolDataConfig {
   /**
    * The validator address of the pool.
    */
@@ -68,13 +68,13 @@ export interface PoolDataConfig {
 }
 
 /**
- * Represents the data of the pool.
+ * Represents the data of the nominator pool.
  */
-export interface PoolData {
+export interface NominatorPoolData {
   /**
    * The current state of the pool.
    */
-  state: PoolDataState;
+  state: NominatorPoolDataState;
   /**
    * The current number of nominators in the pool.
    */
@@ -90,11 +90,11 @@ export interface PoolData {
   /**
    * The configuration settings of the pool.
    */
-  config: PoolDataConfig;
+  config: NominatorPoolDataConfig;
   /**
    * The list of nominators currently in the pool.
    */
-  nominators: PoolDataNominators[];
+  nominators: NominatorPoolDataNominators[];
   /**
    * The list of addresses with pending withdraw requests.
    */
@@ -122,11 +122,11 @@ export interface PoolData {
 }
 
 /**
- * Loads the pool data from the slice.
+ * Loads the nominator pool data from the slice.
  * @param slice - The slice to load the data from.
- * @returns The pool data.
+ * @returns The nominator pool data.
  */
-export function loadPoolData(slice: Slice): PoolData {
+export function loadNominatorPoolData(slice: Slice): NominatorPoolData {
   const state = slice.loadUint(8);
   const nominatorsCount = slice.loadUint(16);
   const stakeAmountSent = slice.loadCoins();
@@ -136,7 +136,7 @@ export function loadPoolData(slice: Slice): PoolData {
   const config = unpackConfig(configCell);
 
   slice.loadMaybeRef();
-  const nominators: PoolDataNominators[] = [];
+  const nominators: NominatorPoolDataNominators[] = [];
 
   slice.loadMaybeRef();
   const withdrawRequests = [];
@@ -168,7 +168,7 @@ export function loadPoolData(slice: Slice): PoolData {
  * @param cell - The cell to unpack the config from.
  * @returns The config.
  */
-function unpackConfig(cell: Cell): PoolDataConfig {
+function unpackConfig(cell: Cell): NominatorPoolDataConfig {
   const slice = cell.beginParse();
   return {
     validatorAddress: new Address(MASTERCHAIN, slice.loadBuffer(256 / 8)),
