@@ -36,7 +36,7 @@ class GenericWorker {
 
   static create(
     workFunction: () => Promise<void>,
-    interval = 1000
+    interval = 1000,
   ): GenericWorker {
     const worker = new GenericWorker(workFunction);
     worker.start(interval);
@@ -52,7 +52,7 @@ export function performanceLog(worker: () => Promise<void>, name: string) {
       await worker();
     } finally {
       logger.info(
-        `do work end ${name} ${((performance.now() - start) / 1000).toFixed(2)}s`
+        `do work end ${name} ${((performance.now() - start) / 1000).toFixed(2)}s`,
       );
     }
   };

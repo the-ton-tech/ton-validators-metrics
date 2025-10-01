@@ -3,28 +3,30 @@ import { z } from "zod";
 
 const CycleScoreboardSchema = z.object({
   scoreboard: z.array(
-    z.object({
-      cycle_id: z.number(),
-      utime_since: z.number(),
-      utime_until: z.number(),
-      adnl_addr: z.string()
-        .transform((val) => Buffer.from(val, "hex")),
-      pubkey: z.string(),
-      pubkey_hash: z.string(),
-      weight: z.number(),
-      idx: z.number(),
-      stake: z.number(),
-      validator_adnl: z.string()
-        .nullable()
-        .transform((val) =>
-          val ? Buffer.from(val, "hex") : null),
-      efficiency: z.number()
-        .nullable()
-        .transform((val) => val ?? 0)
-    }).transform((item => ({
-      ...item,
-      validator_adnl: item.validator_adnl ?? item.adnl_addr,
-    })))
+    z
+      .object({
+        cycle_id: z.number(),
+        utime_since: z.number(),
+        utime_until: z.number(),
+        adnl_addr: z.string().transform((val) => Buffer.from(val, "hex")),
+        pubkey: z.string(),
+        pubkey_hash: z.string(),
+        weight: z.number(),
+        idx: z.number(),
+        stake: z.number(),
+        validator_adnl: z
+          .string()
+          .nullable()
+          .transform((val) => (val ? Buffer.from(val, "hex") : null)),
+        efficiency: z
+          .number()
+          .nullable()
+          .transform((val) => val ?? 0),
+      })
+      .transform((item) => ({
+        ...item,
+        validator_adnl: item.validator_adnl ?? item.adnl_addr,
+      })),
   ),
 });
 
@@ -41,13 +43,13 @@ export type CycleScoreboardEntry = CycleScoreboard["scoreboard"][number];
  * @returns The cycle scoreboard
  */
 export async function getCycleScoreboard(
-  cycleId: string
+  cycleId: string,
 ): Promise<CycleScoreboardEntry[]> {
   const url = `https://toncenter.com/api/qos/cycleScoreboard?cycle_id=${cycleId}`;
   const response = await axios.get(url);
   if (response.status !== 200) {
     throw new Error(
-      `Failed to fetch cycle ${cycleId} scoreboard: ${response.statusText}`
+      `Failed to fetch cycle ${cycleId} scoreboard: ${response.statusText}`,
     );
   }
   const scoreboard = CycleScoreboardSchema.parse(response.data);

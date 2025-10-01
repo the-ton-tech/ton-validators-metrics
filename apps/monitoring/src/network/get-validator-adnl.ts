@@ -7,13 +7,13 @@ const PROCESS_NEW_STAKE = 0x4e73744b;
 export async function getValidatorAdnl(
   client: LiteClient,
   validator: Address,
-  block: BlockID
+  block: BlockID,
 ): Promise<Buffer | null> {
   const transactions = await getAccountTransactions(
     client,
     validator,
     block,
-    32
+    32,
   );
 
   for (const transaction of transactions) {

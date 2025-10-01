@@ -22,14 +22,14 @@ export async function updateValidatorsMessages(): Promise<void> {
   const client = await getLiteClient(
     appConfig.network === "mainnet"
       ? constants.mainnetGlobalConfig
-      : constants.testnetGlobalConfig
+      : constants.testnetGlobalConfig,
   );
 
   const masterAt = await getMasterchainInfo(client);
 
   const validators = appConfig.validators;
   const tasks = validators.map(async (validator) =>
-    updateValidatorMessages(client, masterAt, validator, appConfig.network)
+    updateValidatorMessages(client, masterAt, validator, appConfig.network),
   );
   await Promise.all(tasks);
 }
@@ -38,12 +38,12 @@ async function updateValidatorMessages(
   client: LiteClient,
   masterAt: BlockID,
   validator: Address,
-  network: "mainnet" | "testnet"
+  network: "mainnet" | "testnet",
 ): Promise<void> {
   const transactions = await getAccountTransactions(
     client,
     validator,
-    masterAt
+    masterAt,
   );
 
   const outMessages = transactions
@@ -55,13 +55,13 @@ async function updateValidatorMessages(
     outMessages,
     loadElectorNewStakeMessage,
     metrics.validatorNewStakeMessage,
-    label
+    label,
   );
   updateValidatorMessageMetrics(
     outMessages,
     loadElectorRecoverStakeRequest,
     metrics.validatorRecoverStakeRequest,
-    label
+    label,
   );
 
   const currentAt = Math.floor(Date.now() / 1000);
@@ -75,7 +75,7 @@ function updateValidatorMessageMetrics<T>(
   messages: Message[],
   loader: (cs: Slice) => T,
   metric: Gauge,
-  label: { network: "mainnet" | "testnet"; validator: string }
+  label: { network: "mainnet" | "testnet"; validator: string },
 ): void {
   const messagesData = messages.filter((m) => parseMessageBody(m, loader));
   if (messagesData.length === 0) {

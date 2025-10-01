@@ -4,12 +4,12 @@ import {
   loadElectorNewStakeMessage,
 } from "./new-stake-message";
 import { isElectorConfirmationMessage } from "./confirmation-message";
-import {hasInMessage} from "../transaction/has-in-message";
-import {isTransactionSuccess} from "../transaction/is-transaction-success";
-import {isMessageInternal} from "../message/is-message-internal";
-import {isMessageFrom} from "../message/is-message-from";
-import {checkMessageBody} from "../message/check-message-body";
-import {parseMessageBody} from "../message/parse-message-body";
+import { hasInMessage } from "../transaction/has-in-message";
+import { isTransactionSuccess } from "../transaction/is-transaction-success";
+import { isMessageInternal } from "../message/is-message-internal";
+import { isMessageFrom } from "../message/is-message-from";
+import { checkMessageBody } from "../message/check-message-body";
+import { parseMessageBody } from "../message/parse-message-body";
 
 export type ElectorNewStakeSuccessAction = {
   success: true;

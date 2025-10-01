@@ -1,4 +1,4 @@
-import {Address} from "@ton/core";
+import { Address } from "@ton/core";
 import dotenv from "dotenv";
 import * as process from "process";
 

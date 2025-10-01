@@ -13,7 +13,7 @@ export async function updateElection(): Promise<void> {
   const client = await getLiteClient(
     appConfig.network === "mainnet"
       ? constants.mainnetGlobalConfig
-      : constants.testnetGlobalConfig
+      : constants.testnetGlobalConfig,
   );
 
   const masterAt = await getMasterchainInfo(client);
@@ -22,38 +22,38 @@ export async function updateElection(): Promise<void> {
   const electorData = await getElectorData(
     client,
     networkConfig.electorAddress,
-    masterAt
+    masterAt,
   );
 
   // validatorsElectedFor
   metrics.validatorsElectedFor.set(
     { network: appConfig.network },
-    networkConfig.validators.validatorsElectedFor
+    networkConfig.validators.validatorsElectedFor,
   );
   // electionsStartBefore
   metrics.electionsStartBefore.set(
     { network: appConfig.network },
-    networkConfig.validators.electorsStartBefore
+    networkConfig.validators.electorsStartBefore,
   );
   // electionsEndBefore
   metrics.electionsEndBefore.set(
     { network: appConfig.network },
-    networkConfig.validators.electorsEndBefore
+    networkConfig.validators.electorsEndBefore,
   );
   // stakeHeldFor
   metrics.stakeHeldFor.set(
     { network: appConfig.network },
-    networkConfig.validators.stakeHeldFor
+    networkConfig.validators.stakeHeldFor,
   );
   // validationCycledId
   metrics.validationCycledId.set(
     { network: appConfig.network },
-    parseInt(electorData.activeId.toString(), 10)
+    parseInt(electorData.activeId.toString(), 10),
   );
   // validationUnfreezeAt
   metrics.validationUnfreezeAt.set(
     { network: appConfig.network },
-    electorData.pastElections.get(electorData.activeId).unfreezeAt
+    electorData.pastElections.get(electorData.activeId).unfreezeAt,
   );
   // electionsDataUpdatedAt
   const currentAt = Math.floor(Date.now() / 1000);
@@ -62,6 +62,6 @@ export async function updateElection(): Promise<void> {
   const currentSeqno = masterAt.seqno;
   metrics.electionsDataUpdatedSeqno.set(
     { network: appConfig.network },
-    currentSeqno
+    currentSeqno,
   );
 }

@@ -11,28 +11,28 @@ import { updateValidatorEfficiency } from "./tasks/update-validator-efficiency";
 
 GenericWorker.create(
   performanceLog(updateValidatorsBalance, "updateValidatorBalance"),
-  1000 * 5
+  1000 * 5,
 );
 GenericWorker.create(
   performanceLog(updateValidatorsMessages, "updateValidatorMessages"),
-  1000 * 5
+  1000 * 5,
 );
 GenericWorker.create(
   performanceLog(updateElection, "updateElection"),
-  1000 * 5
+  1000 * 5,
 );
 GenericWorker.create(
   performanceLog(updatePoolsBalance, "updatePoolsBalance"),
-  1000 * 5
+  1000 * 5,
 );
 GenericWorker.create(performanceLog(updatePools, "updatePools"), 1000 * 5);
 GenericWorker.create(
   performanceLog(updatePoolsElectorBalance, "updatePoolsElectorBalance"),
-  1000 * 5
+  1000 * 5,
 );
 GenericWorker.create(
   performanceLog(updateValidatorEfficiency, "updateValidatorEfficiency"),
-  1000 * 5
+  1000 * 5,
 );
 
 startServer()
