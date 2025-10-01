@@ -13,8 +13,8 @@
     "deploy": "turbo run deploy",
     "ci": "turbo run ci",
     "build": "turbo run build",
-    "style": "turbo run style",
-    "check-style": "eslint packages/**/*.ts apps/**/*.ts",
+    "lint": "eslint packages/**/*.ts apps/**/*.ts --max-warnings 0",
+    "lint:fix": "eslint packages/**/*.ts apps/**/*.ts --max-warnings 0 --fix",
     "test": "turbo run test"
   },
   "keywords": [],
