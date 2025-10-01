@@ -192,10 +192,10 @@ export type ElectorDataValidatorComplaint = {
 };
 
 function loadElectorDataValidatorComplaint(
-  cs: Slice
+  cs: Slice,
 ): ElectorDataValidatorComplaint {
   if (cs.loadUint(8) !== 0x2d) {
-    throw new Error('Failed to parse validator complaint')
+    throw new Error("Failed to parse validator complaint");
   }
   return {
     validatorPubkey: cs.loadBuffer(256 / 8),
@@ -211,7 +211,7 @@ function loadElectorDataValidatorComplaint(
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function storeElectorDataValidatorComplaint(
-  src: ElectorDataValidatorComplaint
+  src: ElectorDataValidatorComplaint,
 ) {
   return (builder: Builder) => {
     builder.storeUint(0xbc - 0x100, 8);
@@ -317,13 +317,13 @@ function loadElectorDataPastElection(cs: Slice): ElectorDataPastElection {
     vsetHash: cs.loadBuffer(256 / 8),
     frozenDict: cs.loadDict(
       Dictionary.Keys.BigInt(256),
-      electorDataFrozenValue
+      electorDataFrozenValue,
     ),
     totalStake: cs.loadCoins(),
     bonuses: cs.loadCoins(),
     complaints: cs.loadDict(
       Dictionary.Keys.BigInt(256),
-      electorDataComplaintStatusValue
+      electorDataComplaintStatusValue,
     ),
   };
 }
@@ -403,7 +403,7 @@ export function loadElectorData(cs: Slice): ElectorData {
     credits: cs.loadDict(Dictionary.Keys.BigInt(256), electorDataCreditsValue),
     pastElections: cs.loadDict(
       Dictionary.Keys.BigInt(32),
-      electorDataPastElectionValue
+      electorDataPastElectionValue,
     ),
     grams: cs.loadCoins(),
     activeId: cs.loadUintBig(32),
@@ -414,7 +414,7 @@ export function loadElectorData(cs: Slice): ElectorData {
 export function storeElectData(src: ElectorData) {
   return (builder: Builder): void => {
     builder.storeMaybeRef(
-      src.elect ? beginCell().store(storeElectorDataElect(src.elect)) : null
+      src.elect ? beginCell().store(storeElectorDataElect(src.elect)) : null,
     );
     builder.storeDict(src.credits);
     builder.storeDict(src.pastElections);

@@ -15,7 +15,7 @@ export async function updateValidatorsBalance(): Promise<void> {
   const client = await getLiteClient(
     network === "mainnet"
       ? constants.mainnetGlobalConfig
-      : constants.testnetGlobalConfig
+      : constants.testnetGlobalConfig,
   );
 
   // get masterchain info
@@ -23,7 +23,7 @@ export async function updateValidatorsBalance(): Promise<void> {
 
   const validators = appConfig.validators;
   const tasks = validators.map((validator) =>
-    updateValidatorBalance(client, masterAt, validator, network)
+    updateValidatorBalance(client, masterAt, validator, network),
   );
   await Promise.all(tasks);
 }
@@ -32,7 +32,7 @@ async function updateValidatorBalance(
   client: LiteClient,
   masterAt: BlockID,
   validator: Address,
-  network: "mainnet" | "testnet"
+  network: "mainnet" | "testnet",
 ): Promise<void> {
   const formattedAddress = toFriendlyFormat(validator, network);
   const label = { network, validator: formattedAddress };

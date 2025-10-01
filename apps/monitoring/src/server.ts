@@ -9,7 +9,7 @@ export async function startServer(): Promise<void> {
   const appConfig = await getAppConfig(constants.envPath);
   const port = appConfig.port;
   logger.info(
-    `Server listening to ${port}, metrics exposed on /metrics endpoint`
+    `Server listening to ${port}, metrics exposed on /metrics endpoint`,
   );
   logger.info(`Open http://localhost:${port}/metrics to see the metrics.`);
 

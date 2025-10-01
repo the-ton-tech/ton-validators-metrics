@@ -1,11 +1,11 @@
 import { Address, Transaction } from "@ton/core";
 import { isElectorRecoverStakeRequest } from "./recover-stake-request";
 import { isElectorRecoverStakeResponse } from "./recover-stake-response";
-import {isMessageInternal} from "../message/is-message-internal";
-import {checkMessageBody} from "../message/check-message-body";
-import {isMessageTo} from "../message/is-message-to";
-import {hasInMessage} from "../transaction/has-in-message";
-import {isTransactionSuccess} from "../transaction/is-transaction-success";
+import { isMessageInternal } from "../message/is-message-internal";
+import { checkMessageBody } from "../message/check-message-body";
+import { isMessageTo } from "../message/is-message-to";
+import { hasInMessage } from "../transaction/has-in-message";
+import { isTransactionSuccess } from "../transaction/is-transaction-success";
 
 export type ElectorRecoverStakeSuccessAction = {
   success: true;

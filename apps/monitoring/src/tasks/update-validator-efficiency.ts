@@ -20,7 +20,7 @@ export async function updateValidatorEfficiency(): Promise<void> {
   const client = await getLiteClient(
     network === "mainnet"
       ? constants.mainnetGlobalConfig
-      : constants.testnetGlobalConfig
+      : constants.testnetGlobalConfig,
   );
 
   const masterAt = await getMasterchainInfo(client);
@@ -29,7 +29,7 @@ export async function updateValidatorEfficiency(): Promise<void> {
   const electorData = await getElectorData(
     client,
     networkConfig.electorAddress,
-    masterAt
+    masterAt,
   );
 
   const currentCycleId = electorData.activeId.toString();
@@ -43,7 +43,7 @@ export async function updateValidatorEfficiency(): Promise<void> {
       if (!adnl) {
         console.log(
           "No ADNL address found for validator",
-          toFriendlyFormat(validator, network)
+          toFriendlyFormat(validator, network),
         );
         continue;
       }
@@ -54,7 +54,7 @@ export async function updateValidatorEfficiency(): Promise<void> {
         network,
         currentCycleId,
         scoreboard,
-        masterAt
+        masterAt,
       );
     }
   } catch (error) {
@@ -68,12 +68,12 @@ async function updateValidatorPoolsEfficiency(
   network: "mainnet" | "testnet",
   currentCycleId: string,
   scoreboard: CycleScoreboardEntry[],
-  masterAt: BlockID
+  masterAt: BlockID,
 ): Promise<void> {
   const formattedValidatorAddress = toFriendlyFormat(validator, network);
 
   const entry = scoreboard.find((e: CycleScoreboardEntry) =>
-    e.validator_adnl.equals(adnl)
+    e.validator_adnl.equals(adnl),
   );
 
   const label = {
@@ -99,7 +99,7 @@ async function updateValidatorPoolsEfficiency(
 
   metrics.validatorEfficiencyUpdatedAt.set(
     label,
-    Math.floor(Date.now() / 1000)
+    Math.floor(Date.now() / 1000),
   );
   metrics.validatorEfficiencyUpdatedSeqno.set(label, masterAt.seqno);
   metrics.validatorEfficiency.set(label, entry.efficiency);
