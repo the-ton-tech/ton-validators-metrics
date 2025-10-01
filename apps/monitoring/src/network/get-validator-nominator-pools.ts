@@ -3,17 +3,17 @@ import { BlockID, LiteClient } from "client";
 import { isMessageInternal } from "types";
 import { getAccountTransactions } from "./get-account-transactions";
 
-export async function getValidatorPools(
+export async function getValidatorNominatorPools(
   client: LiteClient,
   address: Address,
-  block: BlockID
+  block: BlockID,
 ): Promise<Address[]> {
   const limit = 32;
   const transactions = await getAccountTransactions(
     client,
     address,
     block,
-    limit
+    limit,
   );
 
   const pools = new Set<string>();

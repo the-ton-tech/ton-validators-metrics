@@ -66,12 +66,12 @@ This is a monorepo project built with TypeScript that consists of several packag
 
 | Metric | Description | Alert Threshold | Labels |
 |--------|-------------|-----------------|--------|
-| `pool_state` | Pool validation cycle status (0: not participating, 1: new stake request, 2: participating) | Should be 2 during validation | network, validator, pool |
-| `pool_nominators_count` | Number of active nominators in the pool | - | network, validator, pool |
-| `pool_balance` | Current balance on the nominator pool contract | - | network, validator, pool |
-| `pool_elector_balance` | Current balance in elector contract | - | network, validator, pool |
-| `pool_stake_amount_sent` | Amount of stake sent for validation | Should match expected stake | network, validator, pool |
-| `pool_validator_amount` | Validator's stake (activation deposit) | Should be > minimum stake | network, validator, pool |
+| `nominator_pool_state` | Pool validation cycle status (0: not participating, 1: new stake request, 2: participating) | Should be 2 during validation | network, validator, nominator_pool |
+| `nominator_pool_nominators_count` | Number of active nominators in the pool | - | network, validator, nominator_pool |
+| `nominator_pool_balance` | Current balance on the nominator pool contract | - | network, validator, nominator_pool |
+| `nominator_pool_elector_balance` | Current balance in elector contract | - | network, validator, nominator_pool |
+| `nominator_pool_stake_amount_sent` | Amount of stake sent for validation | Should match expected stake | network, validator, nominator_pool |
+| `nominator_pool_validator_amount` | Validator's stake (activation deposit) | Should be > minimum stake | network, validator, nominator_pool |
 
 ### Validation Cycle
 
@@ -91,16 +91,16 @@ This is a monorepo project built with TypeScript that consists of several packag
 | `validator_balance_updated_at` | Last successful update timestamp for validator balance | > 5 min delay | network, validator |
 | `validator_messages_updated_at` | Last successful update timestamp for validator messages | > 5 min delay | network, validator |
 | `validator_efficiency_updated_at` | Last successful update timestamp for validator efficiency | > 5 min delay | network, validator |
-| `pool_update_at` | Last successful update timestamp for pool status | > 5 min delay | network, validator, pool |
-| `pool_balance_updated_at` | Last successful update timestamp for pool balance | > 5 min delay | network, validator, pool |
-| `pool_elector_balance_updated_at` | Last successful update timestamp for elector balance | > 5 min delay | network, validator, pool |
+| `nominator_pool_update_at` | Last successful update timestamp for pool status | > 5 min delay | network, validator, nominator_pool |
+| `nominator_pool_balance_updated_at` | Last successful update timestamp for pool balance | > 5 min delay | network, validator, nominator_pool |
+| `nominator_pool_elector_balance_updated_at` | Last successful update timestamp for elector balance | > 5 min delay | network, validator, nominator_pool |
 | `elections_data_updated_at` | Last successful update timestamp for elections data | > 5 min delay | network |
 | `validator_balance_updated_seqno` | Last blockchain seqno for validator balance update | Should increase | network, validator |
 | `validator_messages_updated_seqno` | Last blockchain seqno for validator messages update | Should increase | network, validator |
 | `validator_efficiency_updated_seqno` | Last blockchain seqno for validator efficiency update | Should increase | network, validator |
-| `pool_update_seqno` | Last blockchain seqno for pool status update | Should increase | network, validator, pool |
-| `pool_balance_updated_seqno` | Last blockchain seqno for pool balance update | Should increase | network, validator, pool |
-| `pool_elector_balance_updated_seqno` | Last blockchain seqno for elector balance update | Should increase | network, validator, pool |
+| `nominator_pool_update_seqno` | Last blockchain seqno for pool status update | Should increase | network, validator, nominator_pool |
+| `nominator_pool_balance_updated_seqno` | Last blockchain seqno for pool balance update | Should increase | network, validator, nominator_pool |
+| `nominator_pool_elector_balance_updated_seqno` | Last blockchain seqno for elector balance update | Should increase | network, validator, nominator_pool |
 | `elections_data_updated_seqno` | Last blockchain seqno for elections data update | Should increase | network |
 
 > **Note:** Update tracking metrics help monitor data freshness and verify blockchain sync status.
