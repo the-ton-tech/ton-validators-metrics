@@ -1,10 +1,24 @@
 import { Address } from "@ton/ton";
 import { BlockID, LiteClient } from "client";
-import { isMessageInternal, isNominatorPoolCodeHash } from "types";
+import { isMessageInternal, isSingleNominatorPoolCodeHash } from "types";
 import { getAccountTransactions } from "./get-account-transactions";
 import { getAccountState } from "./get-account-state";
 
-export async function getValidatorNominatorPools(
+/**
+ * Retrieves the single nominator pools associated with a validator address.
+ *
+ * Single-nominator-pool contracts are filtered by their code hash to distinguish
+ * them from nominator-pool contracts.
+ *
+ * The key difference is that a validator typically has ONE single-nominator-pool,
+ * whereas they might have TWO or more nominator-pools.
+ *
+ * @param client - The LiteClient instance.
+ * @param address - The validator address.
+ * @param block - The block ID.
+ * @returns Array of single nominator pool addresses.
+ */
+export async function getValidatorSingleNominatorPools(
   client: LiteClient,
   address: Address,
   block: BlockID,
@@ -34,7 +48,7 @@ export async function getValidatorNominatorPools(
       const cs = body.beginParse();
       const op = cs.loadUint(32);
 
-      if (op !== 0x00000006) {
+      if (op !== 0x4e73744b) {
         continue;
       }
 
@@ -44,19 +58,25 @@ export async function getValidatorNominatorPools(
     }
   }
 
-  // Filter pools by code hash to only return nominator pools
+  // Filter pools by code hash to only return single nominator pools
   const poolAddresses = Array.from(pools).map((pool) => Address.parse(pool));
-  const nominatorPools: Address[] = [];
+  const singleNominatorPools: Address[] = [];
 
   for (const poolAddress of poolAddresses) {
     try {
       const accountState = await getAccountState(client, poolAddress, block);
       const state = accountState.state.storage.state;
 
-      if (state.type === "active" && state.state.code) {
-        if (isNominatorPoolCodeHash(state.state.code)) {
-          nominatorPools.push(poolAddress);
-        }
+      if (state.type !== "active") {
+        continue;
+      }
+
+      if (!state.state.code) {
+        throw new Error("Single nominator pool code is not set");
+      }
+
+      if (isSingleNominatorPoolCodeHash(state.state.code)) {
+        singleNominatorPools.push(poolAddress);
       }
     } catch (e) {
       // Skip pools that we can't check
@@ -64,5 +84,5 @@ export async function getValidatorNominatorPools(
     }
   }
 
-  return nominatorPools;
+  return singleNominatorPools;
 }

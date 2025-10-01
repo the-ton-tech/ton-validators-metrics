@@ -223,4 +223,48 @@ export const metrics = {
     help: "Validator position in participants list (-1: not found, >=0: position in list)",
     labelNames: ["network", "validator"],
   }),
+
+  // Collector for single nominator pool data
+  singleNominatorPoolBalance: new Gauge({
+    name: "single_nominator_pool_balance",
+    help: "Single nominator pool balance",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+  singleNominatorPoolBalanceUpdatedAt: new Gauge({
+    name: "single_nominator_pool_balance_updated_at",
+    help: "Single nominator pool balance updated at",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+  singleNominatorPoolBalanceUpdatedSeqno: new Gauge({
+    name: "single_nominator_pool_balance_updated_seqno",
+    help: "Single nominator pool balance updated seqno",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+
+  singleNominatorPoolElectorBalance: new Gauge({
+    name: "single_nominator_pool_elector_balance",
+    help: "Balance of the single nominator pool in the elector contract",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+  singleNominatorPoolElectorBalanceUpdatedAt: new Gauge({
+    name: "single_nominator_pool_elector_balance_updated_at",
+    help: "Timestamp of the last single nominator pool elector balance update",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+  singleNominatorPoolElectorBalanceUpdatedSeqno: new Gauge({
+    name: "single_nominator_pool_elector_balance_updated_seqno",
+    help: "Seqno of the last single nominator pool elector balance update",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+
+  singleNominatorPoolUpdateAt: new Gauge({
+    name: "single_nominator_pool_update_at",
+    help: "Timestamp of the last single nominator pool data update",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
+  singleNominatorPoolUpdateSeqno: new Gauge({
+    name: "single_nominator_pool_update_seqno",
+    help: "Seqno of the last single nominator pool data update",
+    labelNames: ["network", "validator", "single_nominator_pool"],
+  }),
 };
