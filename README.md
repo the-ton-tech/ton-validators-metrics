@@ -16,8 +16,7 @@ A comprehensive monitoring and metrics collection system for TON (The Open Netwo
   - [Packages](#packages)
 - [Available Metrics](#available-metrics)
   - [Validator Status](#validator-status)
-  - [Nominator Pool Status](#nominator-pool-status)
-  - [Single Nominator Pool Status](#single-nominator-pool-status)
+  - [Pool Status](#pool-status)
   - [Validation Cycle](#validation-cycle)
   - [Update Tracking](#update-tracking)
 - [Getting Started](#getting-started)
@@ -63,23 +62,22 @@ This is a monorepo project built with TypeScript that consists of several packag
 | `validator_new_stake_message` | Last stake message timestamp | Must be within election window (20m) | network, validator |
 | `validator_recover_stake_request` | Last stake recovery timestamp | Required after round end (20m) | network, validator |
 
-### Nominator Pool Status
+### Pool Status
+
+> **Note:** Supports both Nominator Pool and Single Nominator Pool contracts, distinguished by `contract_type` label.
 
 | Metric | Description | Alert Threshold | Labels |
 |--------|-------------|-----------------|--------|
-| `nominator_pool_state` | Pool validation cycle status (0: not participating, 1: new stake request, 2: participating) | Should be 2 during validation | network, validator, nominator_pool |
-| `nominator_pool_nominators_count` | Number of active nominators in the pool | - | network, validator, nominator_pool |
-| `nominator_pool_balance` | Current balance on the nominator pool contract | - | network, validator, nominator_pool |
-| `nominator_pool_elector_balance` | Current balance in elector contract | - | network, validator, nominator_pool |
-| `nominator_pool_stake_amount_sent` | Amount of stake sent for validation | Should match expected stake | network, validator, nominator_pool |
-| `nominator_pool_validator_amount` | Validator's stake (activation deposit) | Should be > minimum stake | network, validator, nominator_pool |
+| `pool_state` | Pool validation cycle status (0: not participating, 1: new stake request, 2: participating) | Should be 2 during validation | network, validator, pool, contract_type |
+| `pool_nominators_count` | Number of active nominators in the pool (always 1 for single nominator) | - | network, validator, pool, contract_type |
+| `pool_balance` | Current balance on the pool contract | - | network, validator, pool, contract_type |
+| `pool_elector_balance` | Current balance in elector contract | - | network, validator, pool, contract_type |
+| `pool_stake_amount_sent` | Amount of stake sent for validation (elector balance for single nominator pools) | Should match expected stake | network, validator, pool, contract_type |
+| `pool_validator_amount` | Validator's stake (activation deposit, always 0 for single nominator) | Should be > minimum stake | network, validator, pool, contract_type |
 
-### Single Nominator Pool Status
-
-| Metric | Description | Alert Threshold | Labels |
-|--------|-------------|-----------------|--------|
-| `single_nominator_pool_balance` | Current balance on the single nominator pool contract | - | network, validator, single_nominator_pool |
-| `single_nominator_pool_elector_balance` | Current balance in elector contract | - | network, validator, single_nominator_pool |
+**Contract Types:**
+- `contract_type="nominator"` - Standard nominator pool (multiple nominators)
+- `contract_type="single_nominator"` - Single nominator pool (one owner)
 
 ### Validation Cycle
 
@@ -99,22 +97,16 @@ This is a monorepo project built with TypeScript that consists of several packag
 | `validator_balance_updated_at` | Last successful update timestamp for validator balance | > 5 min delay | network, validator |
 | `validator_messages_updated_at` | Last successful update timestamp for validator messages | > 5 min delay | network, validator |
 | `validator_efficiency_updated_at` | Last successful update timestamp for validator efficiency | > 5 min delay | network, validator |
-| `nominator_pool_update_at` | Last successful update timestamp for nominator pool status | > 5 min delay | network, validator, nominator_pool |
-| `nominator_pool_balance_updated_at` | Last successful update timestamp for nominator pool balance | > 5 min delay | network, validator, nominator_pool |
-| `nominator_pool_elector_balance_updated_at` | Last successful update timestamp for nominator pool elector balance | > 5 min delay | network, validator, nominator_pool |
-| `single_nominator_pool_update_at` | Last successful update timestamp for single nominator pool status | > 5 min delay | network, validator, single_nominator_pool |
-| `single_nominator_pool_balance_updated_at` | Last successful update timestamp for single nominator pool balance | > 5 min delay | network, validator, single_nominator_pool |
-| `single_nominator_pool_elector_balance_updated_at` | Last successful update timestamp for single nominator pool elector balance | > 5 min delay | network, validator, single_nominator_pool |
+| `pool_update_at` | Last successful update timestamp for pool status | > 5 min delay | network, validator, pool, contract_type |
+| `pool_balance_updated_at` | Last successful update timestamp for pool balance | > 5 min delay | network, validator, pool, contract_type |
+| `pool_elector_balance_updated_at` | Last successful update timestamp for pool elector balance | > 5 min delay | network, validator, pool, contract_type |
 | `elections_data_updated_at` | Last successful update timestamp for elections data | > 5 min delay | network |
 | `validator_balance_updated_seqno` | Last blockchain seqno for validator balance update | Should increase | network, validator |
 | `validator_messages_updated_seqno` | Last blockchain seqno for validator messages update | Should increase | network, validator |
 | `validator_efficiency_updated_seqno` | Last blockchain seqno for validator efficiency update | Should increase | network, validator |
-| `nominator_pool_update_seqno` | Last blockchain seqno for nominator pool status update | Should increase | network, validator, nominator_pool |
-| `nominator_pool_balance_updated_seqno` | Last blockchain seqno for nominator pool balance update | Should increase | network, validator, nominator_pool |
-| `nominator_pool_elector_balance_updated_seqno` | Last blockchain seqno for nominator pool elector balance update | Should increase | network, validator, nominator_pool |
-| `single_nominator_pool_update_seqno` | Last blockchain seqno for single nominator pool status update | Should increase | network, validator, single_nominator_pool |
-| `single_nominator_pool_balance_updated_seqno` | Last blockchain seqno for single nominator pool balance update | Should increase | network, validator, single_nominator_pool |
-| `single_nominator_pool_elector_balance_updated_seqno` | Last blockchain seqno for single nominator pool elector balance update | Should increase | network, validator, single_nominator_pool |
+| `pool_update_seqno` | Last blockchain seqno for pool status update | Should increase | network, validator, pool, contract_type |
+| `pool_balance_updated_seqno` | Last blockchain seqno for pool balance update | Should increase | network, validator, pool, contract_type |
+| `pool_elector_balance_updated_seqno` | Last blockchain seqno for pool elector balance update | Should increase | network, validator, pool, contract_type |
 | `elections_data_updated_seqno` | Last blockchain seqno for elections data update | Should increase | network |
 
 > **Note:** Update tracking metrics help monitor data freshness and verify blockchain sync status.

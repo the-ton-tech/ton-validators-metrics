@@ -28,12 +28,13 @@ export async function updateSingleNominatorPoolsBalance(): Promise<void> {
       masterAt,
     );
     return Promise.all(
-      pools.map((pool) =>
+      pools.map((poolInfo) =>
         updateSingleNominatorPoolBalance(
           client,
           masterAt,
           validator,
-          pool,
+          poolInfo.address,
+          poolInfo.contractType,
           network,
         ),
       ),
@@ -47,6 +48,7 @@ async function updateSingleNominatorPoolBalance(
   masterAt: BlockID,
   validator: Address,
   pool: Address,
+  contractType: string,
   network: "mainnet" | "testnet",
 ): Promise<void> {
   const formattedValidatorAddress = toFriendlyFormat(validator, network);
@@ -54,18 +56,19 @@ async function updateSingleNominatorPoolBalance(
   const label = {
     network,
     validator: formattedValidatorAddress,
-    single_nominator_pool: formattedPoolAddress,
+    pool: formattedPoolAddress,
+    contract_type: contractType,
   };
 
   const account = await getAccountState(client, pool, masterAt);
   const balance = account.state.storage.balance.coins;
   const formattedBalance = parseFloat(fromNano(balance));
 
-  metrics.singleNominatorPoolBalance.set(label, formattedBalance);
+  metrics.poolBalance.set(label, formattedBalance);
 
   const currentAt = Math.floor(Date.now() / 1000);
-  metrics.singleNominatorPoolBalanceUpdatedAt.set(label, currentAt);
+  metrics.poolBalanceUpdatedAt.set(label, currentAt);
 
   const currentSeqno = masterAt.seqno;
-  metrics.singleNominatorPoolBalanceUpdatedSeqno.set(label, currentSeqno);
+  metrics.poolBalanceUpdatedSeqno.set(label, currentSeqno);
 }

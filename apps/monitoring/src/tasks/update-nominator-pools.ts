@@ -25,8 +25,15 @@ export async function updateNominatorPools(): Promise<void> {
     const pools = await getValidatorNominatorPools(client, validator, masterAt);
 
     return Promise.all(
-      pools.map((pool) =>
-        updateNominatorPoolMetrics(client, masterAt, validator, pool, network),
+      pools.map((poolInfo) =>
+        updateNominatorPoolMetrics(
+          client,
+          masterAt,
+          validator,
+          poolInfo.address,
+          poolInfo.contractType,
+          network,
+        ),
       ),
     );
   });
@@ -38,61 +45,60 @@ async function updateNominatorPoolMetrics(
   masterAt: BlockID,
   validator: Address,
   pool: Address,
+  contractType: string,
   network: "mainnet" | "testnet",
 ): Promise<void> {
   const formattedValidatorAddress = toFriendlyFormat(validator, network);
-  const formattedPoolAddress = toFriendlyFormat(pool, network);
+  const formattedPoolAddress = toFriendlyFormat(pool, network, true);
   const label = {
     network,
     validator: formattedValidatorAddress,
-    nominator_pool: formattedPoolAddress,
+    pool: formattedPoolAddress,
+    contract_type: contractType,
   };
 
   const poolData = await getNominatorPoolData(client, pool, masterAt);
 
-  metrics.nominatorPoolState.set(label, poolData.state);
-  metrics.nominatorPoolNominatorsCount.set(label, poolData.nominatorsCount);
-  metrics.nominatorPoolStakeAmountSent.set(
+  metrics.poolState.set(label, poolData.state);
+  metrics.poolNominatorsCount.set(label, poolData.nominatorsCount);
+  metrics.poolStakeAmountSent.set(
     label,
     parseFloat(fromNano(poolData.stakeAmountSent)),
   );
-  metrics.nominatorPoolValidatorAmount.set(
+  metrics.poolValidatorAmount.set(
     label,
     parseFloat(fromNano(poolData.validatorAmount)),
   );
-  metrics.nominatorPoolStakeAt.set(label, poolData.stakeAt);
+  metrics.poolStakeAt.set(label, poolData.stakeAt);
   // use only first 4 bytes of the hash to reduce memory usage
-  metrics.nominatorPoolSavedValidatorSetHash.set(
+  metrics.poolSavedValidatorSetHash.set(
     label,
     poolData.savedValidatorSetHash.readUInt32BE(0),
   );
-  metrics.nominatorPoolValidatorSetChangesCount.set(
+  metrics.poolValidatorSetChangesCount.set(
     label,
     poolData.validatorSetChangesCount,
   );
-  metrics.nominatorPoolValidatorSetChangeTime.set(
+  metrics.poolValidatorSetChangeTime.set(
     label,
     poolData.validatorSetChangeTime,
   );
-  metrics.nominatorPoolStakeHeldFor.set(label, poolData.stakeHeldFor);
-  metrics.nominatorPoolValidatorRewardShare.set(
+  metrics.poolStakeHeldFor.set(label, poolData.stakeHeldFor);
+  metrics.poolValidatorRewardShare.set(
     label,
     poolData.config.validatorRewardShare,
   );
-  metrics.nominatorPoolMaxNominatorsCount.set(
-    label,
-    poolData.config.maxNominatorsCount,
-  );
-  metrics.nominatorPoolMinValidatorStake.set(
+  metrics.poolMaxNominatorsCount.set(label, poolData.config.maxNominatorsCount);
+  metrics.poolMinValidatorStake.set(
     label,
     Number(poolData.config.minValidatorStake),
   );
-  metrics.nominatorPoolMinNominatorStake.set(
+  metrics.poolMinNominatorStake.set(
     label,
     Number(poolData.config.minNominatorStake),
   );
 
   const currentAt = Math.floor(Date.now() / 1000);
-  metrics.nominatorPoolUpdateAt.set(label, currentAt);
-  metrics.nominatorPoolUpdateSeqno.set(label, masterAt.seqno);
+  metrics.poolUpdateAt.set(label, currentAt);
+  metrics.poolUpdateSeqno.set(label, masterAt.seqno);
 }

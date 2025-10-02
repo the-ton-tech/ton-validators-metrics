@@ -24,6 +24,7 @@ export {
   NOMINATOR_POOL_CODE_HASH,
   NOMINATOR_POOL_CODE_HASHES,
   isNominatorPoolCodeHash,
+  getNominatorPoolContractType,
 } from "./nominator-pool/code-hash";
 
 export {
@@ -36,7 +37,10 @@ export {
   SINGLE_NOMINATOR_POOL_V1_1_CODE_HASH,
   SINGLE_NOMINATOR_POOL_CODE_HASHES,
   isSingleNominatorPoolCodeHash,
+  getSingleNominatorPoolContractType,
 } from "./single-nominator-pool/code-hash";
+
+export { getPoolContractType } from "./pool/contract-type";
 
 export {
   ElectorData,

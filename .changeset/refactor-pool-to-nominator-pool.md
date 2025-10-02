@@ -1,11 +1,11 @@
 ---
-"types": major
-"monitoring": major
+"types": minor
+"monitoring": minor
 ---
 
-Refactor pool terminology to nominator-pool for better clarity and extensibility
+Refactor pool metrics with contract type support and address format change
 
-This is a breaking change that renames all pool-related types, functions, and metrics to use the "nominator-pool" naming convention. This change prepares the codebase for supporting additional pool types in the future.
+This is a breaking change that adds support for multiple pool contract types and changes the address format for pool metrics. The metrics now include a `contract_type` label to distinguish between different pool implementations.
 
 **Breaking Changes:**
 
@@ -17,6 +17,9 @@ This is a breaking change that renames all pool-related types, functions, and me
   - `PoolDataNominators` → `NominatorPoolDataNominators`
   - `PoolDataConfig` → `NominatorPoolDataConfig`
 - Renamed function: `loadPoolData()` → `loadNominatorPoolData()`
+- Added code hash validation functions:
+  - `isNominatorPoolCodeHash()` - validates nominator pool contracts
+  - `isSingleNominatorPoolCodeHash()` - validates single nominator pool contracts
 
 ### Monitoring Package (`monitoring`)
 - Renamed files:
@@ -25,12 +28,10 @@ This is a breaking change that renames all pool-related types, functions, and me
 - Renamed functions:
   - `getPoolData()` → `getNominatorPoolData()`
   - `getValidatorPools()` → `getValidatorNominatorPools()`
-- Renamed all Prometheus metrics from `pool_*` to `nominator_pool_*`:
-  - `pool_state` → `nominator_pool_state`
-  - `pool_balance` → `nominator_pool_balance`
-  - `pool_elector_balance` → `nominator_pool_elector_balance`
-  - And 18 other pool-related metrics
-- Changed metric label from `pool` to `nominator_pool`
+- **Address format changed**: Pool addresses now use **bounceable format** (was non-bounceable)
+- **New label added**: All pool metrics now include `contract_type` label
+- New label structure: `{network, validator, pool, contract_type}`
+  - `contract_type` values: `"nominator"` or `"single_nominator"`
 
 **Migration Guide:**
 
@@ -44,6 +45,23 @@ import { NominatorPoolData, loadNominatorPoolData } from 'types';
 ```
 
 If you are using the monitoring metrics in Prometheus/Grafana:
-- Update all queries from `pool_*` to `nominator_pool_*`
-- Update label selectors from `{pool="..."}` to `{nominator_pool="..."}`
+```promql
+# Before
+pool_balance{network="mainnet",validator="...",pool="Uf..."}
+
+# After - with contract_type label and bounceable addresses
+pool_balance{network="mainnet",validator="...",pool="Ef...",contract_type="nominator"}
+pool_balance{network="mainnet",validator="...",pool="Ef...",contract_type="single_nominator"}
+
+# Query by contract type
+pool_balance{contract_type="nominator"}
+pool_balance{contract_type="single_nominator"}
+
+# Query both types together
+sum(pool_balance{validator="..."}) by (contract_type)
+```
+
+**Important Changes:**
+1. **New label**: `contract_type` added to all pool metrics - update your queries to include or filter by this label
+2. **Address format**: Pool addresses changed from non-bounceable to bounceable format (`Uf...` → `Ef...` for mainnet, `0f...` → `kf...` for testnet) - update any hardcoded pool addresses in your dashboards and alerting rules
 

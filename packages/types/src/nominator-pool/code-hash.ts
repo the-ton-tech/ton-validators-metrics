@@ -26,3 +26,19 @@ export const NOMINATOR_POOL_CODE_HASHES = [NOMINATOR_POOL_CODE_HASH];
 export function isNominatorPoolCodeHash(code: Cell): boolean {
   return NOMINATOR_POOL_CODE_HASHES.includes(code.hash().toString("hex"));
 }
+
+/**
+ * Gets the contract type identifier for a Nominator Pool.
+ *
+ * @param code - The code hash to check (as Cell)
+ * @returns Contract type string (e.g., "nominator-pool") or null if not recognized
+ */
+export function getNominatorPoolContractType(code: Cell): string | null {
+  const codeHash = code.hash().toString("hex");
+
+  if (codeHash === NOMINATOR_POOL_CODE_HASH) {
+    return "nominator-pool-v1.0";
+  }
+
+  return null;
+}

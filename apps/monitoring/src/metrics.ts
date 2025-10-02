@@ -18,21 +18,21 @@ export const metrics = {
     labelNames: ["network", "validator"],
   }),
 
-  // Collector for nominator pool balance
-  nominatorPoolBalance: new Gauge({
-    name: "nominator_pool_balance",
-    help: "Nominator pool balance",
-    labelNames: ["network", "validator", "nominator_pool"],
+  // Collector for pool balance (both nominator pool and single nominator pool)
+  poolBalance: new Gauge({
+    name: "pool_balance",
+    help: "Pool balance",
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolBalanceUpdatedAt: new Gauge({
-    name: "nominator_pool_balance_updated_at",
-    help: "Nominator pool balance updated at",
-    labelNames: ["network", "validator", "nominator_pool"],
+  poolBalanceUpdatedAt: new Gauge({
+    name: "pool_balance_updated_at",
+    help: "Pool balance updated at",
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolBalanceUpdatedSeqno: new Gauge({
-    name: "nominator_pool_balance_updated_seqno",
-    help: "Nominator pool balance updated seqno",
-    labelNames: ["network", "validator", "nominator_pool"],
+  poolBalanceUpdatedSeqno: new Gauge({
+    name: "pool_balance_updated_seqno",
+    help: "Pool balance updated seqno",
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
 
   // Collector for latest stake message and last recover stake message
@@ -99,98 +99,98 @@ export const metrics = {
     labelNames: ["network"],
   }),
 
-  // Collector for nominator pool data
-  nominatorPoolState: new Gauge({
-    name: "nominator_pool_state",
-    help: "Nominator pool state (0: not participating, 1: new stake request sent, 2: participating)",
-    labelNames: ["network", "validator", "nominator_pool"],
+  // Collector for pool data (both nominator pool and single nominator pool)
+  poolState: new Gauge({
+    name: "pool_state",
+    help: "Pool state (0: not participating, 1: new stake request sent, 2: participating)",
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolNominatorsCount: new Gauge({
-    name: "nominator_pool_nominators_count",
+  poolNominatorsCount: new Gauge({
+    name: "pool_nominators_count",
     help: "Number of nominators in the pool",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolStakeAmountSent: new Gauge({
-    name: "nominator_pool_stake_amount_sent",
-    help: "Stake amount sent for validation",
-    labelNames: ["network", "validator", "nominator_pool"],
+  poolStakeAmountSent: new Gauge({
+    name: "pool_stake_amount_sent",
+    help: "Stake amount sent for validation (elector balance for single nominator pools)",
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolValidatorAmount: new Gauge({
-    name: "nominator_pool_validator_amount",
+  poolValidatorAmount: new Gauge({
+    name: "pool_validator_amount",
     help: "Amount of coins owned by the validator",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolStakeAt: new Gauge({
-    name: "nominator_pool_stake_at",
+  poolStakeAt: new Gauge({
+    name: "pool_stake_at",
     help: "ID of the validation round in which the pool is participating",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolSavedValidatorSetHash: new Gauge({
-    name: "nominator_pool_saved_validator_set_hash",
+  poolSavedValidatorSetHash: new Gauge({
+    name: "pool_saved_validator_set_hash",
     help: "Saved validator set hash",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolValidatorSetChangesCount: new Gauge({
-    name: "nominator_pool_validator_set_changes_count",
+  poolValidatorSetChangesCount: new Gauge({
+    name: "pool_validator_set_changes_count",
     help: "Validator set changes count",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolValidatorSetChangeTime: new Gauge({
-    name: "nominator_pool_validator_set_change_time",
+  poolValidatorSetChangeTime: new Gauge({
+    name: "pool_validator_set_change_time",
     help: "Validator set change time",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolStakeHeldFor: new Gauge({
-    name: "nominator_pool_stake_held_for",
+  poolStakeHeldFor: new Gauge({
+    name: "pool_stake_held_for",
     help: "Stake held for period",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolValidatorRewardShare: new Gauge({
-    name: "nominator_pool_validator_reward_share",
+  poolValidatorRewardShare: new Gauge({
+    name: "pool_validator_reward_share",
     help: "Share of the reward from validation that goes to the validator (in basis points)",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolMaxNominatorsCount: new Gauge({
-    name: "nominator_pool_max_nominators_count",
+  poolMaxNominatorsCount: new Gauge({
+    name: "pool_max_nominators_count",
     help: "Maximum number of nominators allowed in the pool",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolMinValidatorStake: new Gauge({
-    name: "nominator_pool_min_validator_stake",
+  poolMinValidatorStake: new Gauge({
+    name: "pool_min_validator_stake",
     help: "Minimum stake required for the validator",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolMinNominatorStake: new Gauge({
-    name: "nominator_pool_min_nominator_stake",
+  poolMinNominatorStake: new Gauge({
+    name: "pool_min_nominator_stake",
     help: "Minimum stake required for nominators",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
 
-  nominatorPoolUpdateAt: new Gauge({
-    name: "nominator_pool_update_at",
+  poolUpdateAt: new Gauge({
+    name: "pool_update_at",
     help: "Timestamp of the last pool data update",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolUpdateSeqno: new Gauge({
-    name: "nominator_pool_update_seqno",
+  poolUpdateSeqno: new Gauge({
+    name: "pool_update_seqno",
     help: "Seqno of the last pool data update",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
 
-  nominatorPoolElectorBalance: new Gauge({
-    name: "nominator_pool_elector_balance",
+  poolElectorBalance: new Gauge({
+    name: "pool_elector_balance",
     help: "Balance of the pool in the elector contract",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolElectorBalanceUpdatedAt: new Gauge({
-    name: "nominator_pool_elector_balance_updated_at",
+  poolElectorBalanceUpdatedAt: new Gauge({
+    name: "pool_elector_balance_updated_at",
     help: "Timestamp of the last pool elector balance update",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
-  nominatorPoolElectorBalanceUpdatedSeqno: new Gauge({
-    name: "nominator_pool_elector_balance_updated_seqno",
+  poolElectorBalanceUpdatedSeqno: new Gauge({
+    name: "pool_elector_balance_updated_seqno",
     help: "Seqno of the last pool elector balance update",
-    labelNames: ["network", "validator", "nominator_pool"],
+    labelNames: ["network", "validator", "pool", "contract_type"],
   }),
 
   validatorEfficiency: new Gauge({
@@ -222,49 +222,5 @@ export const metrics = {
     name: "validator_participation_position",
     help: "Validator position in participants list (-1: not found, >=0: position in list)",
     labelNames: ["network", "validator"],
-  }),
-
-  // Collector for single nominator pool data
-  singleNominatorPoolBalance: new Gauge({
-    name: "single_nominator_pool_balance",
-    help: "Single nominator pool balance",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-  singleNominatorPoolBalanceUpdatedAt: new Gauge({
-    name: "single_nominator_pool_balance_updated_at",
-    help: "Single nominator pool balance updated at",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-  singleNominatorPoolBalanceUpdatedSeqno: new Gauge({
-    name: "single_nominator_pool_balance_updated_seqno",
-    help: "Single nominator pool balance updated seqno",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-
-  singleNominatorPoolElectorBalance: new Gauge({
-    name: "single_nominator_pool_elector_balance",
-    help: "Balance of the single nominator pool in the elector contract",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-  singleNominatorPoolElectorBalanceUpdatedAt: new Gauge({
-    name: "single_nominator_pool_elector_balance_updated_at",
-    help: "Timestamp of the last single nominator pool elector balance update",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-  singleNominatorPoolElectorBalanceUpdatedSeqno: new Gauge({
-    name: "single_nominator_pool_elector_balance_updated_seqno",
-    help: "Seqno of the last single nominator pool elector balance update",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-
-  singleNominatorPoolUpdateAt: new Gauge({
-    name: "single_nominator_pool_update_at",
-    help: "Timestamp of the last single nominator pool data update",
-    labelNames: ["network", "validator", "single_nominator_pool"],
-  }),
-  singleNominatorPoolUpdateSeqno: new Gauge({
-    name: "single_nominator_pool_update_seqno",
-    help: "Seqno of the last single nominator pool data update",
-    labelNames: ["network", "validator", "single_nominator_pool"],
   }),
 };
