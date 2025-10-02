@@ -1,6 +1,10 @@
 import { Address } from "@ton/ton";
 import { BlockID, LiteClient } from "client";
-import { isMessageInternal, isSingleNominatorPoolCodeHash } from "types";
+import {
+  isMessageInternal,
+  isSingleNominatorPoolCodeHash,
+  getSingleNominatorPoolContractType,
+} from "types";
 import { getAccountTransactions } from "./get-account-transactions";
 import { getAccountState } from "./get-account-state";
 
@@ -16,13 +20,13 @@ import { getAccountState } from "./get-account-state";
  * @param client - The LiteClient instance.
  * @param address - The validator address.
  * @param block - The block ID.
- * @returns Array of single nominator pool addresses.
+ * @returns Array of single nominator pool addresses with their contract types.
  */
 export async function getValidatorSingleNominatorPools(
   client: LiteClient,
   address: Address,
   block: BlockID,
-): Promise<Address[]> {
+): Promise<Array<{ address: Address; contractType: string }>> {
   const limit = 32;
   const transactions = await getAccountTransactions(
     client,
@@ -58,9 +62,12 @@ export async function getValidatorSingleNominatorPools(
     }
   }
 
-  // Filter pools by code hash to only return single nominator pools
+  // Filter pools by code hash to only return single nominator pools with contract types
   const poolAddresses = Array.from(pools).map((pool) => Address.parse(pool));
-  const singleNominatorPools: Address[] = [];
+  const singleNominatorPools: Array<{
+    address: Address;
+    contractType: string;
+  }> = [];
 
   for (const poolAddress of poolAddresses) {
     try {
@@ -76,7 +83,12 @@ export async function getValidatorSingleNominatorPools(
       }
 
       if (isSingleNominatorPoolCodeHash(state.state.code)) {
-        singleNominatorPools.push(poolAddress);
+        const contractType = getSingleNominatorPoolContractType(
+          state.state.code,
+        );
+        if (contractType) {
+          singleNominatorPools.push({ address: poolAddress, contractType });
+        }
       }
     } catch (e) {
       // Skip pools that we can't check

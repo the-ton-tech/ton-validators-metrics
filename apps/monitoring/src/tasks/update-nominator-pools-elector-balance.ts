@@ -33,11 +33,12 @@ export async function updateNominatorPoolsElectorBalance(): Promise<void> {
     const pools = await getValidatorNominatorPools(client, validator, masterAt);
 
     return Promise.all(
-      pools.map((pool) =>
+      pools.map((poolInfo) =>
         updateNominatorPoolElectorBalance(
           masterAt,
           validator,
-          pool,
+          poolInfo.address,
+          poolInfo.contractType,
           network,
           electorData,
         ),
@@ -51,25 +52,25 @@ async function updateNominatorPoolElectorBalance(
   masterAt: BlockID,
   validator: Address,
   pool: Address,
+  contractType: string,
   network: "mainnet" | "testnet",
   electorData: Awaited<ReturnType<typeof getElectorData>>,
 ): Promise<void> {
   const formattedValidatorAddress = toFriendlyFormat(validator, network);
-  const formattedPoolAddress = toFriendlyFormat(pool, network);
+  const formattedPoolAddress = toFriendlyFormat(pool, network, true);
   const label = {
     network,
     validator: formattedValidatorAddress,
-    nominator_pool: formattedPoolAddress,
+    pool: formattedPoolAddress,
+    contract_type: contractType,
   };
-
-  const poolAddressBigint = BigInt(`0x${pool.hash.toString("hex")}`);
 
   let poolElectBalance = Array.from(
     electorData.elect?.members.values() ?? [],
   ).find((member) => member.srcAddr.equals(pool))?.msgValue;
 
   if (!poolElectBalance) {
-    poolElectBalance = electorData.credits.get(poolAddressBigint)?.amount;
+    poolElectBalance = electorData.credits.get(pool.hash)?.amount;
   }
 
   if (!poolElectBalance) {
@@ -80,15 +81,32 @@ async function updateNominatorPoolElectorBalance(
   }
 
   if (!poolElectBalance) {
+    for (const electionId of electorData.pastElections.keys()) {
+      const pastElection = electorData.pastElections.get(electionId);
+      if (!pastElection) {
+        continue;
+      }
+
+      const frozenBalance = Array.from(pastElection.frozenDict.values()).find(
+        (frozen) => frozen.srcAddr.equals(pool),
+      )?.trueStake;
+
+      if (!frozenBalance) {
+        continue;
+      }
+
+      poolElectBalance = frozenBalance;
+      break;
+    }
+  }
+
+  if (!poolElectBalance) {
     poolElectBalance = BigInt(0);
   }
 
-  metrics.nominatorPoolElectorBalance.set(
-    label,
-    parseFloat(fromNano(poolElectBalance)),
-  );
+  metrics.poolElectorBalance.set(label, parseFloat(fromNano(poolElectBalance)));
 
   const currentAt = Math.floor(Date.now() / 1000);
-  metrics.nominatorPoolElectorBalanceUpdatedAt.set(label, currentAt);
-  metrics.nominatorPoolElectorBalanceUpdatedSeqno.set(label, masterAt.seqno);
+  metrics.poolElectorBalanceUpdatedAt.set(label, currentAt);
+  metrics.poolElectorBalanceUpdatedSeqno.set(label, masterAt.seqno);
 }

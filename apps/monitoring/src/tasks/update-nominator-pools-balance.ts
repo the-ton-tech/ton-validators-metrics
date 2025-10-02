@@ -12,22 +12,27 @@ export async function updateNominatorPoolsBalance(): Promise<void> {
   const appConfig = await getAppConfig(constants.envPath);
   const network = appConfig.network;
 
-  // get lite client
   const client = await getLiteClient(
     network === "mainnet"
       ? constants.mainnetGlobalConfig
       : constants.testnetGlobalConfig,
   );
 
-  // get masterchain info
   const masterAt = await getMasterchainInfo(client);
 
   const validators = appConfig.validators;
   const tasks = validators.map(async (validator) => {
     const pools = await getValidatorNominatorPools(client, validator, masterAt);
     return Promise.all(
-      pools.map((pool) =>
-        updateNominatorPoolBalance(client, masterAt, validator, pool, network),
+      pools.map((poolInfo) =>
+        updateNominatorPoolBalance(
+          client,
+          masterAt,
+          validator,
+          poolInfo.address,
+          poolInfo.contractType,
+          network,
+        ),
       ),
     );
   });
@@ -39,25 +44,27 @@ async function updateNominatorPoolBalance(
   masterAt: BlockID,
   validator: Address,
   pool: Address,
+  contractType: string,
   network: "mainnet" | "testnet",
 ): Promise<void> {
   const formattedValidatorAddress = toFriendlyFormat(validator, network);
-  const formattedPoolAddress = toFriendlyFormat(pool, network);
+  const formattedPoolAddress = toFriendlyFormat(pool, network, true);
   const label = {
     network,
     validator: formattedValidatorAddress,
-    nominator_pool: formattedPoolAddress,
+    pool: formattedPoolAddress,
+    contract_type: contractType,
   };
 
   const account = await getAccountState(client, pool, masterAt);
   const balance = account.state.storage.balance.coins;
   const formattedBalance = parseFloat(fromNano(balance));
 
-  metrics.nominatorPoolBalance.set(label, formattedBalance);
+  metrics.poolBalance.set(label, formattedBalance);
 
   const currentAt = Math.floor(Date.now() / 1000);
-  metrics.nominatorPoolBalanceUpdatedAt.set(label, currentAt);
+  metrics.poolBalanceUpdatedAt.set(label, currentAt);
 
   const currentSeqno = masterAt.seqno;
-  metrics.nominatorPoolBalanceUpdatedSeqno.set(label, currentSeqno);
+  metrics.poolBalanceUpdatedSeqno.set(label, currentSeqno);
 }

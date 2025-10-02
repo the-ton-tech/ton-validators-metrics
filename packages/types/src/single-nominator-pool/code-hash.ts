@@ -37,3 +37,23 @@ export function isSingleNominatorPoolCodeHash(code: Cell): boolean {
     code.hash().toString("hex"),
   );
 }
+
+/**
+ * Gets the contract type identifier for a Single Nominator Pool.
+ *
+ * @param code - The code hash to check (as Cell)
+ * @returns Contract type string (e.g., "single-nominator-pool-v1.0") or null if not recognized
+ */
+export function getSingleNominatorPoolContractType(code: Cell): string | null {
+  const codeHash = code.hash().toString("hex");
+
+  if (codeHash === SINGLE_NOMINATOR_POOL_V1_0_CODE_HASH) {
+    return "single-nominator-pool-v1.0";
+  }
+
+  if (codeHash === SINGLE_NOMINATOR_POOL_V1_1_CODE_HASH) {
+    return "single-nominator-pool-v1.1";
+  }
+
+  return null;
+}

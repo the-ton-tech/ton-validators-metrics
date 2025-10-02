@@ -1,6 +1,10 @@
 import { Address } from "@ton/ton";
 import { BlockID, LiteClient } from "client";
-import { isMessageInternal, isNominatorPoolCodeHash } from "types";
+import {
+  isMessageInternal,
+  isNominatorPoolCodeHash,
+  getNominatorPoolContractType,
+} from "types";
 import { getAccountTransactions } from "./get-account-transactions";
 import { getAccountState } from "./get-account-state";
 
@@ -8,7 +12,7 @@ export async function getValidatorNominatorPools(
   client: LiteClient,
   address: Address,
   block: BlockID,
-): Promise<Address[]> {
+): Promise<Array<{ address: Address; contractType: string }>> {
   const limit = 32;
   const transactions = await getAccountTransactions(
     client,
@@ -44,9 +48,9 @@ export async function getValidatorNominatorPools(
     }
   }
 
-  // Filter pools by code hash to only return nominator pools
+  // Filter pools by code hash to only return nominator pools with contract types
   const poolAddresses = Array.from(pools).map((pool) => Address.parse(pool));
-  const nominatorPools: Address[] = [];
+  const nominatorPools: Array<{ address: Address; contractType: string }> = [];
 
   for (const poolAddress of poolAddresses) {
     try {
@@ -55,7 +59,10 @@ export async function getValidatorNominatorPools(
 
       if (state.type === "active" && state.state.code) {
         if (isNominatorPoolCodeHash(state.state.code)) {
-          nominatorPools.push(poolAddress);
+          const contractType = getNominatorPoolContractType(state.state.code);
+          if (contractType) {
+            nominatorPools.push({ address: poolAddress, contractType });
+          }
         }
       }
     } catch (e) {

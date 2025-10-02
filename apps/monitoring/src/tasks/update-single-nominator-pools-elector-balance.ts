@@ -37,11 +37,12 @@ export async function updateSingleNominatorPoolsElectorBalance(): Promise<void> 
     );
 
     return Promise.all(
-      pools.map((pool) =>
+      pools.map((poolInfo) =>
         updateSingleNominatorPoolElectorBalance(
           masterAt,
           validator,
-          pool,
+          poolInfo.address,
+          poolInfo.contractType,
           network,
           electorData,
         ),
@@ -55,6 +56,7 @@ async function updateSingleNominatorPoolElectorBalance(
   masterAt: BlockID,
   validator: Address,
   pool: Address,
+  contractType: string,
   network: "mainnet" | "testnet",
   electorData: Awaited<ReturnType<typeof getElectorData>>,
 ): Promise<void> {
@@ -63,10 +65,9 @@ async function updateSingleNominatorPoolElectorBalance(
   const label = {
     network,
     validator: formattedValidatorAddress,
-    single_nominator_pool: formattedPoolAddress,
+    pool: formattedPoolAddress,
+    contract_type: contractType,
   };
-
-  const poolAddressBigint = BigInt(`0x${pool.hash.toString("hex")}`);
 
   // Single nominator pools can have stakes in multiple elections simultaneously
   // We need to sum up all balances across different sources
@@ -82,7 +83,7 @@ async function updateSingleNominatorPoolElectorBalance(
   }
 
   // Check credits (returns from previous elections)
-  const creditsBalance = electorData.credits.get(poolAddressBigint)?.amount;
+  const creditsBalance = electorData.credits.get(pool.hash)?.amount;
   if (creditsBalance) {
     totalPoolElectBalance += creditsBalance;
   }
@@ -107,15 +108,9 @@ async function updateSingleNominatorPoolElectorBalance(
 
   const poolElectBalance = totalPoolElectBalance;
 
-  metrics.singleNominatorPoolElectorBalance.set(
-    label,
-    parseFloat(fromNano(poolElectBalance)),
-  );
+  metrics.poolElectorBalance.set(label, parseFloat(fromNano(poolElectBalance)));
 
   const currentAt = Math.floor(Date.now() / 1000);
-  metrics.singleNominatorPoolElectorBalanceUpdatedAt.set(label, currentAt);
-  metrics.singleNominatorPoolElectorBalanceUpdatedSeqno.set(
-    label,
-    masterAt.seqno,
-  );
+  metrics.poolElectorBalanceUpdatedAt.set(label, currentAt);
+  metrics.poolElectorBalanceUpdatedSeqno.set(label, masterAt.seqno);
 }

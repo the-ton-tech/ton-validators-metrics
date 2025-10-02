@@ -77,7 +77,7 @@ export type ElectorDataElect = {
   electClose: number;
   minStake: bigint;
   totalStake: bigint;
-  members: Dictionary<bigint, ElectorDataMembers>;
+  members: Dictionary<Buffer, ElectorDataMembers>;
   failed: boolean;
   finished: boolean;
 };
@@ -88,7 +88,10 @@ function loadElectorDataElect(cs: Slice): ElectorDataElect {
     electClose: cs.loadUint(32),
     minStake: cs.loadCoins(),
     totalStake: cs.loadCoins(),
-    members: cs.loadDict(Dictionary.Keys.BigInt(256), electorDataMembersValue),
+    members: cs.loadDict(
+      Dictionary.Keys.Buffer(256 / 8),
+      electorDataMembersValue,
+    ),
     failed: cs.loadBoolean(),
     finished: cs.loadBoolean(),
   };
@@ -122,7 +125,7 @@ export type ElectorDataFrozen = {
 function loadElectorDataFrozen(cs: Slice): ElectorDataFrozen {
   return {
     srcAddr: new Address(-1, cs.loadBuffer(256 / 8)),
-    weight: cs.loadIntBig(64),
+    weight: cs.loadUintBig(64),
     trueStake: cs.loadCoins(),
     frozen: cs.loadBoolean(),
   };
@@ -304,10 +307,10 @@ export type ElectorDataPastElection = {
   unfreezeAt: number;
   stakeHeld: number;
   vsetHash: Buffer;
-  frozenDict: Dictionary<bigint, ElectorDataFrozen>;
+  frozenDict: Dictionary<Buffer, ElectorDataFrozen>;
   totalStake: bigint;
   bonuses: bigint;
-  complaints: Dictionary<bigint, ElectorDataComplaintStatus>;
+  complaints: Dictionary<Buffer, ElectorDataComplaintStatus>;
 };
 
 function loadElectorDataPastElection(cs: Slice): ElectorDataPastElection {
@@ -316,13 +319,13 @@ function loadElectorDataPastElection(cs: Slice): ElectorDataPastElection {
     stakeHeld: cs.loadUint(32),
     vsetHash: cs.loadBuffer(256 / 8),
     frozenDict: cs.loadDict(
-      Dictionary.Keys.BigInt(256),
+      Dictionary.Keys.Buffer(256 / 8),
       electorDataFrozenValue,
     ),
     totalStake: cs.loadCoins(),
     bonuses: cs.loadCoins(),
     complaints: cs.loadDict(
-      Dictionary.Keys.BigInt(256),
+      Dictionary.Keys.Buffer(256 / 8),
       electorDataComplaintStatusValue,
     ),
   };
@@ -387,7 +390,7 @@ const electorDataCreditsValue: DictionaryValue<ElectorDataCredits> = {
 export type ElectorData = {
   elect: ElectorDataElect | null;
   // credits~credit_to(reward_addr, reward);
-  credits: Dictionary<bigint, ElectorDataCredits>;
+  credits: Dictionary<Buffer, ElectorDataCredits>;
   // past_elections~udict_set_builder(32, active_id, pack_past_election(unfreeze_at, stake_held, hash, dict, total_stake, bonuses, complaints));
   pastElections: Dictionary<bigint, ElectorDataPastElection>;
   grams: bigint;
@@ -400,9 +403,12 @@ export function loadElectorData(cs: Slice): ElectorData {
     elect: cs.loadBit()
       ? loadElectorDataElect(cs.loadRef().beginParse())
       : null,
-    credits: cs.loadDict(Dictionary.Keys.BigInt(256), electorDataCreditsValue),
+    credits: cs.loadDict(
+      Dictionary.Keys.Buffer(256 / 8),
+      electorDataCreditsValue,
+    ),
     pastElections: cs.loadDict(
-      Dictionary.Keys.BigInt(32),
+      Dictionary.Keys.BigUint(32),
       electorDataPastElectionValue,
     ),
     grams: cs.loadCoins(),
