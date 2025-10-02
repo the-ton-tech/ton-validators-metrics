@@ -3,9 +3,9 @@
 "monitoring": minor
 ---
 
-Refactor pool metrics with contract type support and address format change
+Refactor nominator pool types and add contract type support
 
-This is a breaking change that adds support for multiple pool contract types and changes the address format for pool metrics. The metrics now include a `contract_type` label to distinguish between different pool implementations.
+This change refactors the existing nominator pool implementation to support multiple pool contract types and changes the address format for pool metrics.
 
 **Breaking Changes:**
 
@@ -17,21 +17,19 @@ This is a breaking change that adds support for multiple pool contract types and
   - `PoolDataNominators` → `NominatorPoolDataNominators`
   - `PoolDataConfig` → `NominatorPoolDataConfig`
 - Renamed function: `loadPoolData()` → `loadNominatorPoolData()`
-- Added code hash validation functions:
+- Added code hash validation:
+  - `NOMINATOR_POOL_CODE_HASH` - code hash constant
+  - `NOMINATOR_POOL_CODE_HASHES` - array of code hashes
   - `isNominatorPoolCodeHash()` - validates nominator pool contracts
-  - `isSingleNominatorPoolCodeHash()` - validates single nominator pool contracts
+  - `getNominatorPoolContractType()` - returns "nominator-pool-v1.0"
 
 ### Monitoring Package (`monitoring`)
-- Renamed files:
-  - `get-pool-data.ts` → `get-nominator-pool-data.ts`
-  - `get-validator-pools.ts` → `get-validator-nominator-pools.ts`
 - Renamed functions:
   - `getPoolData()` → `getNominatorPoolData()`
   - `getValidatorPools()` → `getValidatorNominatorPools()`
 - **Address format changed**: Pool addresses now use **bounceable format** (was non-bounceable)
 - **New label added**: All pool metrics now include `contract_type` label
 - New label structure: `{network, validator, pool, contract_type}`
-  - `contract_type` values: `"nominator"` or `"single_nominator"`
 
 **Migration Guide:**
 
@@ -50,15 +48,13 @@ If you are using the monitoring metrics in Prometheus/Grafana:
 pool_balance{network="mainnet",validator="...",pool="Uf..."}
 
 # After - with contract_type label and bounceable addresses
-pool_balance{network="mainnet",validator="...",pool="Ef...",contract_type="nominator"}
-pool_balance{network="mainnet",validator="...",pool="Ef...",contract_type="single_nominator"}
+pool_balance{network="mainnet",validator="...",pool="Ef...",contract_type="nominator-pool-v1.0"}
 
 # Query by contract type
-pool_balance{contract_type="nominator"}
-pool_balance{contract_type="single_nominator"}
+pool_balance{contract_type="nominator-pool-v1.0"}
 
-# Query both types together
-sum(pool_balance{validator="..."}) by (contract_type)
+# Aggregate across all validators
+sum(pool_balance) by (contract_type)
 ```
 
 **Important Changes:**
